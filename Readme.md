@@ -2,7 +2,7 @@
 
 This is a basic starter setup for new TypeScript projects.
 
-It is configured with some tools that I like to use: [TypeScript](https://www.typescriptlang.org/) for the benefits of static types, [jest](https://jestjs.io) for testing, and [eslint](https://eslint.org) for linting, [prettier](https://prettier.io/) for formatting.
+It is configured with some tools that I like to use: [TypeScript](https://www.typescriptlang.org/) (in strict mode) for the benefits of static types, [jest](https://jestjs.io) for testing, and [eslint](https://eslint.org) (with strict type rules) for linting, [prettier](https://prettier.io/) for formatting.
 
 ## Setup
 
