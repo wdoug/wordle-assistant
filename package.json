@@ -9,7 +9,7 @@
     "prepare": "husky install",
     "prettier:all": "prettier . --write",
     "prettier:check": "prettier . --check",
-    "start": "node --loader ts-node/esm index.ts",
+    "start": "ts-node index.ts",
     "test": "jest --watch",
     "typecheck": "tsc --noEmit"
   },

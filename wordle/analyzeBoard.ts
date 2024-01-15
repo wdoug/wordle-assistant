@@ -16,7 +16,10 @@ export type Board = BoardWord[];
 const wordLength = 5;
 
 function processBoardInformation(board: Board) {
-  const correctLetters = Array.from(Array(wordLength));
+  const correctLetters = Array.from(Array(wordLength)) as (
+    | string
+    | undefined
+  )[];
   type NotAllowedLetterLocations = { [character: string]: Set<number> };
   const notAllowedLetterLocations: NotAllowedLetterLocations = {};
   const unusedLetters = new Set();
@@ -39,6 +42,8 @@ function processBoardInformation(board: Board) {
         correctLetters[i] = char.letter;
         knownWordLetterCounts[char.letter] =
           (knownWordLetterCounts[char.letter] ?? 0) + 1;
+        // Future proof in case additional valid states are added
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       } else if (char.state === "differentSpot") {
         knownWordLetterCounts[char.letter] =
           (knownWordLetterCounts[char.letter] ?? 0) + 1;
