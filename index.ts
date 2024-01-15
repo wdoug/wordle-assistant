@@ -13,12 +13,9 @@ export type BoardWord = [Character, Character, Character, Character, Character];
 
 export type Board = BoardWord[];
 
-export function analyzeBoard(
-  board: Board,
-  allowedInputWords: string[],
-  possibleFinalWords: string[],
-) {
-  const wordLength = 5;
+const wordLength = 5;
+
+function processBoardInformation(board: Board) {
   const correctLetters = Array.from(Array(wordLength));
   type NotAllowedLetterLocations = { [character: string]: Set<number> };
   const notAllowedLetterLocations: NotAllowedLetterLocations = {};
@@ -52,15 +49,36 @@ export function analyzeBoard(
         notAllowedLetterLocations[char.letter].add(i);
       }
     }
-    for (const letter in Object.keys(knownWordLetterCounts)) {
+    // console.log("knownWordLetterCounts", knownWordLetterCounts);
+    for (const letter of Object.keys(knownWordLetterCounts)) {
       knownLetterCounts[letter] = Math.max(
         knownWordLetterCounts[letter] ?? 0,
         knownLetterCounts[letter] ?? 0,
       );
     }
   }
+  return {
+    correctLetters,
+    notAllowedLetterLocations,
+    unusedLetters,
+    knownLetterCounts,
+  };
+}
 
-  const possibleRemainingWords = possibleFinalWords.filter((possibleWord) => {
+type BoardInfo = ReturnType<typeof processBoardInformation>;
+
+function filterRemainingBoardWords(
+  boardInfo: BoardInfo,
+  possibleFinalWords: string[],
+) {
+  const {
+    correctLetters,
+    notAllowedLetterLocations,
+    unusedLetters,
+    knownLetterCounts,
+  } = boardInfo;
+  return possibleFinalWords.filter((possibleWord) => {
+    type LetterCount = { [character: string]: number };
     const possibleWordLetterCounts: LetterCount = {};
     for (let i = 0; i < wordLength; i++) {
       const letter = possibleWord[i];
@@ -82,7 +100,7 @@ export function analyzeBoard(
       }
     }
 
-    for (const letter in Object.keys(knownLetterCounts)) {
+    for (const letter of Object.keys(knownLetterCounts)) {
       const possibleWordLetterCount = possibleWordLetterCounts[letter];
       if (
         !possibleWordLetterCount ||
@@ -94,8 +112,25 @@ export function analyzeBoard(
 
     return true;
   });
+}
 
+export function getPossibleRemainingWords(
+  board: Board,
+  possibleFinalWords: string[],
+) {
+  const boardInfo = processBoardInformation(board);
+  return filterRemainingBoardWords(boardInfo, possibleFinalWords);
+}
+
+export function analyzeBoard(
+  board: Board,
+  allowedInputWords: string[],
+  possibleFinalWords: string[],
+) {
   return {
-    possibleRemainingWords,
+    possibleRemainingWords: getPossibleRemainingWords(
+      board,
+      possibleFinalWords,
+    ),
   };
 }
