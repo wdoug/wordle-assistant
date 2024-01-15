@@ -1,4 +1,4 @@
-import { getPossibleRemainingWords, Board, BoardWord } from "./index";
+import { getPossibleRemainingWords, Board, BoardWord } from "./analyzeBoard";
 
 describe("getPossibleRemainingWords", () => {
   it("works with everything empty", () => {

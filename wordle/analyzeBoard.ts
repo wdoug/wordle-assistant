@@ -1,8 +1,8 @@
-type Output = {
-  possibleWordCount: number;
-  possibleRemainingWords: string[];
-  suggestedNextWords: string[];
-};
+// type Output = {
+//   possibleWordCount: number;
+//   possibleRemainingWords: string[];
+//   suggestedNextWords: string[];
+// };
 
 export type Character = {
   letter: string;
@@ -46,7 +46,7 @@ function processBoardInformation(board: Board) {
         if (!notAllowedLetterLocations[char.letter]) {
           notAllowedLetterLocations[char.letter] = new Set();
         }
-        notAllowedLetterLocations[char.letter].add(i);
+        notAllowedLetterLocations[char.letter]?.add(i);
       }
     }
     // console.log("knownWordLetterCounts", knownWordLetterCounts);
@@ -102,9 +102,11 @@ function filterRemainingBoardWords(
 
     for (const letter of Object.keys(knownLetterCounts)) {
       const possibleWordLetterCount = possibleWordLetterCounts[letter];
+      const letterCount = knownLetterCounts[letter];
       if (
         !possibleWordLetterCount ||
-        possibleWordLetterCount < knownLetterCounts[letter]
+        (typeof letterCount === "number" &&
+          possibleWordLetterCount < letterCount)
       ) {
         return false;
       }
