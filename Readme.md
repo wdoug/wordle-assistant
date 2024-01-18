@@ -1,8 +1,6 @@
-# TypeScript Starter
+# Wordle Assistant
 
-This is a basic starter setup for new TypeScript projects.
-
-It is configured with some tools that I like to use: [TypeScript](https://www.typescriptlang.org/) (in strict mode) for the benefits of static types, [jest](https://jestjs.io) for testing, and [eslint](https://eslint.org) (with strict type rules) for linting, [prettier](https://prettier.io/) for formatting.
+A little project for fun for helping solve the New York Time's [Wordle game](https://www.nytimes.com/games/wordle/index.html).
 
 ## Setup
 
