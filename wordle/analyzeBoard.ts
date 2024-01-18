@@ -25,7 +25,6 @@ function processBoardInformation(board: Board) {
   const unusedLetters = new Set();
   type LetterCount = { [character: string]: number };
   const knownLetterCounts: LetterCount = {};
-  // TODO: Figure out multiple character
   for (const boardWord of board) {
     const knownWordLetterCounts: LetterCount = {};
     for (let i = 0; i < wordLength; i++) {

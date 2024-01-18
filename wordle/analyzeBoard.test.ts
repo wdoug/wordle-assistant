@@ -93,5 +93,17 @@ describe("getPossibleRemainingWords", () => {
     expect(result).toEqual(["abcfg"]);
   });
 
-  it.todo("properly removes words that have too many of a given letter");
+  it("properly removes words that have too many of a given letter", () => {
+    const possibleFinalWords = ["mummy"];
+    const boardWord: BoardWord = [
+      { letter: "m", state: "correctSpot" },
+      { letter: "o", state: "unused" },
+      { letter: "m", state: "correctSpot" },
+      { letter: "z", state: "unused" },
+      { letter: "m", state: "unused" },
+    ];
+    const board = [boardWord];
+    const result = getPossibleRemainingWords(board, possibleFinalWords);
+    expect(result).toEqual([]);
+  });
 });
