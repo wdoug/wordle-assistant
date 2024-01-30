@@ -6,7 +6,7 @@
   "main": "index.ts",
   "scripts": {
     "lint": "eslint . --ext .js,.ts",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prettier:all": "prettier . --write",
     "prettier:check": "prettier . --check",
     "start": "ts-node index.ts",
