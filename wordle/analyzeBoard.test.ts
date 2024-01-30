@@ -106,4 +106,19 @@ describe("getPossibleRemainingWords", () => {
     const result = getPossibleRemainingWords(board, possibleFinalWords);
     expect(result).toEqual([]);
   });
+
+  it("should work properly for second unused letter", () => {
+    const possibleFinalWords = ["leggy"];
+    const board: Board = [
+      [
+        { letter: "e", state: "differentSpot" },
+        { letter: "l", state: "differentSpot" },
+        { letter: "v", state: "unused" },
+        { letter: "e", state: "unused" },
+        { letter: "n", state: "unused" },
+      ],
+    ];
+    const result = getPossibleRemainingWords(board, possibleFinalWords);
+    expect(result).toEqual(["leggy"]);
+  });
 });
