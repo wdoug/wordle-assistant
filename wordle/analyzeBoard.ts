@@ -24,7 +24,9 @@ function processBoardInformation(board: Board) {
   const notAllowedLetterLocations: NotAllowedLetterLocations = {};
   const unusedLetters = new Set();
   type LetterCount = { [character: string]: number };
-  const knownLetterCounts: LetterCount = {};
+  const validLetterCounts: LetterCount = {};
+  const invalidLetterCounts: LetterCount = {};
+
   for (const boardWord of board) {
     const knownWordLetterCounts: LetterCount = {};
     for (let i = 0; i < wordLength; i++) {
@@ -36,7 +38,12 @@ function processBoardInformation(board: Board) {
       }
 
       if (char.state === "unused") {
-        unusedLetters.add(char.letter);
+        const knownWordLetterCount = knownWordLetterCounts[char.letter];
+        if (knownWordLetterCount === undefined) {
+          unusedLetters.add(char.letter);
+        } else {
+          invalidLetterCounts[char.letter] = knownWordLetterCount + 1;
+        }
       } else if (char.state === "correctSpot") {
         correctLetters[i] = char.letter;
         knownWordLetterCounts[char.letter] =
@@ -55,9 +62,9 @@ function processBoardInformation(board: Board) {
     }
     // console.log("knownWordLetterCounts", knownWordLetterCounts);
     for (const letter of Object.keys(knownWordLetterCounts)) {
-      knownLetterCounts[letter] = Math.max(
+      validLetterCounts[letter] = Math.max(
         knownWordLetterCounts[letter] ?? 0,
-        knownLetterCounts[letter] ?? 0,
+        validLetterCounts[letter] ?? 0,
       );
     }
   }
@@ -65,7 +72,8 @@ function processBoardInformation(board: Board) {
     correctLetters,
     notAllowedLetterLocations,
     unusedLetters,
-    knownLetterCounts,
+    validLetterCounts,
+    invalidLetterCounts,
   };
 }
 
@@ -79,7 +87,8 @@ function filterRemainingBoardWords(
     correctLetters,
     notAllowedLetterLocations,
     unusedLetters,
-    knownLetterCounts,
+    validLetterCounts,
+    invalidLetterCounts,
   } = boardInfo;
   return possibleFinalWords.filter((possibleWord) => {
     type LetterCount = { [character: string]: number };
@@ -104,13 +113,25 @@ function filterRemainingBoardWords(
       }
     }
 
-    for (const letter of Object.keys(knownLetterCounts)) {
+    for (const letter of Object.keys(validLetterCounts)) {
       const possibleWordLetterCount = possibleWordLetterCounts[letter];
-      const letterCount = knownLetterCounts[letter];
+      const validLetterCount = validLetterCounts[letter];
       if (
         !possibleWordLetterCount ||
-        (typeof letterCount === "number" &&
-          possibleWordLetterCount < letterCount)
+        (typeof validLetterCount === "number" &&
+          possibleWordLetterCount < validLetterCount)
+      ) {
+        return false;
+      }
+    }
+
+    for (const letter of Object.keys(invalidLetterCounts)) {
+      const possibleWordLetterCount = possibleWordLetterCounts[letter];
+      const invalidLetterCount = invalidLetterCounts[letter];
+      if (
+        possibleWordLetterCount &&
+        typeof invalidLetterCount === "number" &&
+        possibleWordLetterCount >= invalidLetterCount
       ) {
         return false;
       }
@@ -125,6 +146,7 @@ export function getPossibleRemainingWords(
   possibleFinalWords: string[],
 ) {
   const boardInfo = processBoardInformation(board);
+  // console.log("boardInfo", boardInfo);
   return filterRemainingBoardWords(boardInfo, possibleFinalWords);
 }
 
